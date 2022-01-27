@@ -7,6 +7,8 @@
  *  * STATE_1. 'out2' asserts when state machine is in
  *  * FINAL state.
  *  */
+
+//change
 module fsm(clk, a, out1, out2);
 
    input  clk;
