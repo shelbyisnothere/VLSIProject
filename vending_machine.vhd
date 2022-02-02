@@ -1,4 +1,5 @@
 /*
+ * Filename: vending_machine.vhd
  * Authors: Anna Nguyen, David Wang, Shelby King
  * Date: 2/8/2022
  * Course: Introduction to VLSI Design EE4325.001 Spring 2022
@@ -6,24 +7,22 @@
  *	Simple vending machine FSM.
  */
 
-module insertion(clk, reset, quarter_in, select1, select2,
-                 i[2:0], product1, product2, quarter_out);
-  in;
+module vending_machine_fsm(clk, reset, quarter_in, select1, select2, 
+                 i, product1, product2, quarter_out);
   input clk;
   input reset;
-  input quarter_in;		// A quarter has been inserted into the machine
-  input select1;		// Selection for product 1
-  input select2;		// Selection for product 2
-  output i[1:0];		// Amount inserted. Uses the following encoding:
-  						//		00 = $0.00
-  						//		01 = $0.25
-  						//		10 = $0.50
-  						//		11 = $0.75
-  output product1;		// Product 1; costs $0.50
-  output product2;		// Product 2; costs $0.75
-  output quarter_out;	// A quarter has been dispensed by the machine
-  //output s1;
-  //output s2;
+  input quarter_in;			// A quarter has been inserted into the machine
+  input select1;			// Selection for product 1
+  input select2;			// Selection for product 2
+  output reg [1:0] i;		// Amount inserted. Uses the following encoding:
+  							//		00 = $0.00
+  							//		01 = $0.25
+  							//		10 = $0.50
+  							//		11 = $0.75
+  output reg product1;		// Product 1; costs $0.50
+  output reg product2;		// Product 2; costs $0.75
+  output reg quarter_out;	// A quarter has been dispensed by the machine
+
   
   reg [2:0] state;		// The current state of the FSM
 
@@ -95,7 +94,7 @@ module insertion(clk, reset, quarter_in, select1, select2,
           i <= 2'b10;
           product1 <= 1;
           product2 <= 0;
-          quarter <= 0;
+          quarter_out <= 0;
           state <= I0;
         end
       I6:
@@ -111,3 +110,4 @@ module insertion(clk, reset, quarter_in, select1, select2,
     endcase
   end
 endmodule
+
