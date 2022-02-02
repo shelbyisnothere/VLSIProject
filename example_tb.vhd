@@ -1,61 +1,41 @@
-library ieee;
-use ieee.std_logic_1164.all;
+/*
+ * Filename: vending_testbench.vhd
+ * Authors: Anna Nguyen, David Wang, Shelby King
+ * Date: 2/8/2022
+ * Course: Introduction to VLSI Design EE4325.001 Spring 2022
+ * Description:
+ *	Test bench for vending machine FSM.
+ */
 
-entity example_tb is
-end example_tb;
-
-architecture behaviour of vending is
-component vending
-port
-(
-clk : in std_logic;
-rst : in std_logic;
-dollar_in : in std_logic;
-quarter_in : in std_logic;
-water_out : out std_logic
-); 
-end component;
-
-
-signal clk : std_logic := '0';
-signal rst : std_logic := '0';
-signal dollar_in : std_logic := '0';
-signal quarter_in : std_logic := '0';
-
-signal water_out : std_logic;
-
-constant clk_period : time := 20ns;
-begin
-
-uut : vending 
-port map (
-clk => clk,
-rst => rst,
-dollar_in => dollar_in,
-quarter_in => quarter_in,
-water_out => water_out
-);
-
-clk_process: process
-begin
-clk <= '0';
-wait for clk_period/2;
-clk <= '1';
-wait for clk_period/2;
-end process;
-
-stim_proc: process
-begin
-wait for 20 ns;
-rst <= '1';
-wait for 20 ns;
-rst <= '0';
-dollar_in <= '1';
-wait for 200 ns;
-dollar_in <= '0';
-quarter_in <= '1';
-wait for 200 ns;
-quarter_in <= '0';
-wait;
+module vending_fsm_testbench;
+  reg clk, reset, quarter_in, select1, select2;
+  reg [1:0] i;
+  wire product1, product2, quarter_out;
+  
+  vending_machine_fsm FSM(.clk(clk), .reset(reset), .quarter_in(quarter_in),
+                      .select1(select1), .select2(select2), .i(i),
+                      .product1(product1), .product2(product2), .quarter_out(quarter_out));
+  
+  initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars(1, vending_fsm_testbench);
+    
+    // Purchase item 1 with $0.50
+    clk = 0;
+    quarter_in = 1;
+    quarter_in = 1;
+    select1 = 1;
+    $display("Products (1): %0h, and (2) %0h", product1, product2);
+    toggle_clk;
+    
+  end
+  
+  task toggle_clk;
+    begin
+      #10 clk = ~clk;
+      #10 clk = ~clk;
+    end
+  endtask
+endmodule
 
 
