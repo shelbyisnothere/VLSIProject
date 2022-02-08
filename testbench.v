@@ -15,18 +15,18 @@
 //		file using the readmemb verilog standard function. Cases defined
 //		and explained are located in the test_input.tv file.
 module vending_controller_testbench;
-  logic clk, reset, quarter_in, select1, select2;
-  logic [1:0] i;
-  logic product1, product2, quarter_out;
+  reg clk, reset, quarter_in, select1, select2;
+  reg [1:0] i;
+  reg product1, product2, quarter_out;
   
   //reg [5:0] step_counter;
   //logic end_sim;
   
   // For validation
-  logic [31:0] vector_count, errors;
-  logic [7:0] test_vectors[10000:0];
-  logic [1:0] i_expected;
-  logic p1_expected, p2_expected, qout_expected;
+  reg [31:0] vector_count, errors;
+  reg [7:0] test_vectors[10000:0];
+  reg [1:0] i_expected;
+  reg p1_expected, p2_expected, qout_expected;
   
   // Instantiate FSM
   vending_controller FSM(clk, reset, quarter_in, select1, select2, 
@@ -35,7 +35,7 @@ module vending_controller_testbench;
   always
     begin
       clk = 1; 	#5;
-      clk = 0;	#5;
+      clk = 0;	 #5;
     end
 
   initial
@@ -91,7 +91,7 @@ module vending_controller_testbench;
             errors = errors + 1;
           end
         
-        vector_count += 1;
+        vector_count = vector_count + 1;
         
         if(test_vectors[vector_count] === 8'bx)
           begin

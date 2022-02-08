@@ -21,17 +21,27 @@ module vending_controller(clk, reset, quarter_in, select1, select2,
   input quarter_in;			// A quarter has been inserted into the machine
   input select1;			// Selection for product 1
   input select2;			// Selection for product 2
-  output reg [1:0] i;		// Amount inserted. Uses the following encoding:
+  output [1:0] i;		// Amount inserted. Uses the following encoding:
   							//		00 = $0.00
   							//		01 = $0.25
   							//		10 = $0.50
   							//		11 = $0.75
-  output reg product1;		// Product 1; costs $0.50
-  output reg product2;		// Product 2; costs $0.75
-  output reg quarter_out;	// A quarter has been dispensed by the machine
+  output product1;		// Product 1; costs $0.50
+  output product2;		// Product 2; costs $0.75
+  output quarter_out;	// A quarter has been dispensed by the machine
   
-  typedef enum logic [2:0] {S0, S1, S2, S3, S4, S5, S6, S7} statetype;
-  statetype state, next_state;
+  // State encodings
+  parameter [2:0]
+  S0 = 3'b000,
+  S1 = 3'b001,
+  S2 = 3'b010,
+  S3 = 3'b011,
+  S4 = 3'b100,
+  S5 = 3'b101,
+  S6 = 3'b110,
+  S7 = 3'b111;
+  
+  reg [2:0] state, next_state;
   
   always @(posedge clk)
     begin
