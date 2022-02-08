@@ -50,7 +50,7 @@ module vending_controller_testbench;
       errors = 0;
       
       // Pulse reset
-      reset = 0;		#11;
+      reset = 0;		#3;
       reset = 1;		#10;
       reset = 0;
     end
