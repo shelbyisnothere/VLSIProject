@@ -31,7 +31,8 @@
 001_11000     //select product 2
 000_11010     //product 2 dispensed with NO change 
 // Case 4 
-//    Insert $0.75, select product 1 and select product 2 will remain in $0.75 state and user will select product 2 and see product dispensed with NO change
+//    Insert $0.75, select product 1 and select product 2 will remain in $0.75 state 
+//    user will select product 2 and see product dispensed with NO change
 000_00000     //start state
 100_00000     //$0.25 inserted
 100_01000     //$0.50 inserted
@@ -39,3 +40,14 @@
 011_10000     //select product 1 and 2 at the same time remaining in the same $0.75 state 
 001_11000     //select product 2
 000_11010     //product 2 dispensed with NO change 
+//Case 5
+//    Insert $0.75, and insert another quarter and see quarter dispensed 
+//    Select product 2 and see product dispensed
+000_00000     //start state
+100_00000     //insert quarter
+100_01000     //insert quarter ($0.25 in)
+100_10000     //insert quarter ($0.50 in)
+100_11000     //insert quarter ($0.75 in)
+000_11001     //($0.75 in) dispense quarter
+001_11000     //select product 2 ($0.75 in)
+000_11010     //dispense product 2
