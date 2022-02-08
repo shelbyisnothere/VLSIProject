@@ -96,7 +96,7 @@ module vending_controller_testbench;
         if(test_vectors[vector_count] === 8'bx)
           begin
             $display("%d tests completed with %d errors", vector_count, errors);
-            $finish;
+            $stop;
           end
       end
   
