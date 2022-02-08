@@ -1,0 +1,18 @@
+/*
+ * Filename: test_input.tv
+ * Authors: Anna Nguyen, David Wang, Shelby King
+ * Date: 2/8/2022
+ * Course: Introduction to VLSI Design EE4325.001 Spring 2022
+ * Description:
+ *		Input file for project 1 testbench.
+ */
+// Case 1 
+//		Insert $0.50, select product 1 and see product dispensed
+000_00000
+100_00000
+100_01000
+010_10000
+000_10100 
+// Case 2 
+//		Still being written
+000_00000
