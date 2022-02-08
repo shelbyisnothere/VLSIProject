@@ -16,8 +16,8 @@
 //		and explained are located in the test_input.tv file.
 module vending_controller_testbench;
   reg clk, reset, quarter_in, select1, select2;
-  reg [1:0] i;
-  reg product1, product2, quarter_out;
+  wire [1:0] i;
+  wire product1, product2, quarter_out;
   
   //reg [5:0] step_counter;
   //logic end_sim;
@@ -43,7 +43,7 @@ module vending_controller_testbench;
     begin
       $dumpfile("dump.vcd");
       $dumpvars(1, vending_controller_testbench);
-      $readmemb("test_input.tv", test_vectors);
+      $readmemb("test_input.txt", test_vectors);
       
       // Set validation values
       vector_count = 0;
