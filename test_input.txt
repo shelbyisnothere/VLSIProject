@@ -5,6 +5,7 @@
  * Course: Introduction to VLSI Design EE4325.001 Spring 2022
  * Description:
  *		Input file for project 1 testbench.
+ *    (quarter_in)(select1)(select2)_(i[1])(i[0])(product1)(product2)(quarter_out)
  */
 // Case 1 
 //		Insert $0.50, select product 1 and see product dispensed
