@@ -1,15 +1,20 @@
 /*
- * Filename: vending_machine.v
+ * Filename: vending_controller_fsm.v
  * Authors: Anna Nguyen, David Wang, Shelby King
  * Date: 2/8/2022
  * Course: Introduction to VLSI Design EE4325.001 Spring 2022
  * Description:
- *	Simple vending machine FSM.
+ *		Simple vending machine FSM. Inspiration taken from project
+ *		resourses, as well as the course text book - CMOS VLSI Design,
+ *		Weste and Harris. 
  */
 
-// TO DO: Rename file to have verilog format (i think this is in vhdl format??)
-
-module vending_machine_fsm(clk, reset, quarter_in, select1, select2, 
+// vending_controller module
+//		Intended to be the main controller for the vending machine.
+//		Takes 5 inputs (clk, reset, quarter_in, select1, and select2),
+//		and 4 outputs (i, product1, product2, and quarter_out). Uses 
+//		a finite state machine to process input
+module vending_controller(clk, reset, quarter_in, select1, select2, 
                  i, product1, product2, quarter_out);
   input clk;
   input reset;
@@ -25,61 +30,45 @@ module vending_machine_fsm(clk, reset, quarter_in, select1, select2,
   output reg product2;		// Product 2; costs $0.75
   output reg quarter_out;	// A quarter has been dispensed by the machine
   
-  typedef enum logic [2:0] {I0, I1, I2, I3, I4, I5, I6} statetype;
+  typedef enum logic [2:0] {S0, S1, S2, S3, S4, S5, S6} statetype;
   statetype state, next_state;
-
-  /* Old code. Don't want to delete
-  reg [2:0] state;		// The current state of the FSM
-
-  // State encodings
-  parameter [2:0]
-  I0 = 3'b000,	// Start state
-  I1 = 3'b001,	// One quarter has been inserted into the vending machine
-  I2 = 3'b010,	// Two quarters have been inserted into the vending machine
-  I3 = 3'b011,	// Three quarters have been inserted into the vending machine
-  I4 = 3'b100,	// Product 1 is dispensed with no change
-  I5 = 3'b101,	// Product 2 is dispensed with no change
-  I6 = 3'b110;	// Product 1 is dispensed with $0.25 change
-  */
   
-  // TO DO: Try ```always_ff @(posedge clk)```
   always @(posedge clk)
-    begin // TO DO: Try without?
-      if (reset)	state <= I0;
+    begin
+      if (reset)	state <= S0;
       else			state <= next_state;
     end
   
-  // TO DO: Try ```always_comb``` 
   always @(*)
     begin
       case(state)
-        I0: 
+        S0: 
           if(quarter_in) 
-              next_state <= I1;
-        I1: 
-          if(quarter_in) next_state <= I2;
-        I2:
-          if(quarter_in) next_state <= I3;
-          else if(select1) next_state <= I5;
-        I3: 
-          if(select2) next_state <= I4;
-          else if(select1) next_state <= I6;
-        I4:	
-          next_state <= I0;
-        I5: 
-          next_state <= I0;
-        I6: 
-          next_state <= I0;
+              next_state = S1;
+        S1: 
+          if(quarter_in) next_state = S2;
+        S2:
+          if(quarter_in) next_state = S3;
+          else if(select1) next_state = S5;
+        S3: 
+          if(select2) next_state = S4;
+          else if(select1) next_state = S6;
+        S4:	
+          next_state = S0;
+        S5: 
+          next_state = S0;
+        S6: 
+          next_state = S0;
         default: 
-          next_state <= I0;
+          next_state = S0;
       endcase
     end
   
   // Output logic
-  assign i = {(state == I2 | state == I3 | state == I4 | state == I5 | state == I6),
-              (state == I1 | state == I3 | state == I4 | state == I6)};
-  assign product1 = (state == I5 | state == I6);
-  assign product2 = (state == I4);
-  assign quarter_out = (state == I6);
+  assign i = {(state == S2 | state == S3 | state == S4 | state == S5 | state == S6),
+              (state == S1 | state == S3 | state == S4 | state == S6)};
+  assign product1 = (state == S5 | state == S6);
+  assign product2 = (state == S4);
+  assign quarter_out = (state == S6);
   
-endmodule
+endmodule // vending_controller
