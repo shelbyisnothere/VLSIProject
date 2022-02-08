@@ -14,5 +14,18 @@
 010_10000
 000_10100 
 // Case 2 
-//		Still being written
+//		Insert $0.75, select product 1 and see product dispensed with change
 000_00000
+100_00000
+100_01000
+100_10000
+010_11000
+000_11101
+// Case 3 
+//		Insert $0.75, select product 2 and see product dispensed with NO change
+000_00000
+100_00000
+100_01000
+100_10000
+001_11000
+000_11010
