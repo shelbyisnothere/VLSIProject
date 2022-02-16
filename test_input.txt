@@ -8,25 +8,47 @@
  *    (quarter_in)(select1)(select2)_(i[1])(i[0])(product1)(product2)(quarter_out)
  */
 // Case 1 
-//		Insert $0.50, select product 1 and see product dispensed
-000_00000
-100_00000
-100_01000
-010_10000
-000_10100 
+//		Insert $0.50, select product 1 and see product dispensed with NO change
+000_00000     //start state
+100_00000     //insert $0.25 
+100_01000     //insert $0.25, check if $0.50 inserted
+010_10000     //select product 1
+000_10100     //product 1 dispensed
 // Case 2 
 //		Insert $0.75, select product 1 and see product dispensed with change
-000_00000
-100_00000
-100_01000
-100_10000
-010_11000
-000_11101
+000_00000     //start state
+100_00000     //insert $0.25 
+100_01000     //insert $0.25, check if $0.50 inserted
+100_10000     //insert $0.25, check if $0.75 inserted
+010_11000     //select product 1
+000_11101     //product 1 dispensed with change
 // Case 3 
 //		Insert $0.75, select product 2 and see product dispensed with NO change
-000_00000
-100_00000
-100_01000
-100_10000
-001_11000
-000_11010
+000_00000     //start state
+100_00000     //insert $0.25
+100_01000     //insert $0.25, check if $0.50 inserted
+100_10000     //insert $0.25, check if $0.75 inserted
+001_11000     //select product 2
+000_11010     //product 2 dispensed with NO change 
+// Case 4 
+//    Insert $0.75, select product 1 and select product 2 will remain in $0.75 state 
+//    user will select product 2 and see product dispensed with NO change
+000_00000     //start state
+100_00000     //insert $0.25 
+100_01000     //insert $0.25, check if $0.50 inserted
+100_10000     //insert $0.25, check if $0.75 inserted
+011_11000     //select product 1 and 2 at the same time check $0.75 inserted 
+000_11000     //check no changes made
+001_11000     //select product 2
+000_11010     //product 2 dispensed with NO change 
+//Case 5
+//    Insert $0.75, and insert another quarter and see quarter dispensed 
+//    Select product 2 and see product dispensed
+000_00000     //start state
+100_00000     //insert $0.25
+100_01000     //insert $0.25, check if $0.50 inserted
+100_10000     //insert $0.25, check if $0.75 inserted
+100_11000     //insert $0.25, check if $0.75 inserted
+000_11001     //check no changes made, dispense $0.25
+001_11000     //select product 2 
+000_11010     //product 2 dispensed
