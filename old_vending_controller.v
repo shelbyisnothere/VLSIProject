@@ -14,11 +14,12 @@
 //		Takes 5 inputs (clk, reset, quarter_in, select1, and select2),
 //		and 4 outputs (i, product1, product2, and quarter_out). Uses 
 //		a finite state machine to process input
-module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
-                 i, product1, product2, product3, quarter_out);
+module old_vending_controller(clk, reset, quarter_in, dollar_in, select1, select2, select3,
+                 i, product1, product2, product3, quarter_out, dollar_out);
   input clk;
   input reset;
   input quarter_in;			// A quarter has been inserted into the machine
+  input dollar_in;    // A dollar has been inserted into the machine
   input select1;			// Selection for product 1
   input select2;			// Selection for product 2
   input select3;
@@ -31,6 +32,7 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
   output product2;		// Product 2; costs $0.75
   output product3;  // Product 3; costs $1.00
   output [2:0] quarter_out;	// A quarter has been dispensed by the machine
+  output dollar_out;        // A dollar has been dispensed by the machine
   
   // State encodings
   parameter [4:0]
@@ -53,7 +55,11 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
   S16 = 5'b10000,
   S17 = 5'b10001,
   S18 = 5'b10010,
-  S19 = 5'b10011;
+  S19 = 5'b10011,
+  S20 = 5'b10100,
+  S21 = 5'b10101,
+  S22 = 5'b10110,
+  S23 = 5'b10111;
   
   reg [3:0] i;		// Amount inserted. Uses the following encoding:
   							//		00 = $0.00
@@ -64,6 +70,7 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
   reg product2;		// Product 2; costs $0.75
   reg product3;  // Product 3; costs $1.00
   reg [2:0] quarter_out;	// A quarter has been dispensed by the machine
+  reg dollar_out;        // A dollar has been dispensed by the machine
   
   reg [4:0] state, next_state;
   
@@ -83,8 +90,9 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
             i[3] = 0; i[2] = 0; i[1] = 0; i[0] = 0;
             product1 = 0; product2 = 0; product3 = 0;
             quarter_out[2] = 0; quarter_out[1] = 0; quarter_out[0] = 0;
-            if(quarter_in) 
-              next_state = S1;
+            dollar_out = 0;
+            if(quarter_in) next_state = S1;
+            else if(dollar_in) next_state = S8;
             else
               next_state = S0;
           end
@@ -93,7 +101,9 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
             i[3] = 0; i[2] = 0; i[1] = 0; i[0] = 1;
             product1 = 0; product2 = 0; product3 = 0;
             quarter_out[2] = 0; quarter_out[1] = 0; quarter_out[0] = 0;
+            dollar_out = 0;
             if(quarter_in) next_state = S2;
+            else if(dollar_in) next_state = S9;
             else
               next_state = S1;
           end
@@ -102,7 +112,9 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
             i[3] = 0; i[2] = 0; i[1] = 1; i[0] = 0;
             product1 = 0; product2 = 0; product3 = 0;
             quarter_out[2] = 0; quarter_out[1] = 0; quarter_out[0] = 0;
+            dollar_out = 0;
             if(quarter_in) next_state = S3;
+            else if(dollar_in) next_state = S10;
             else if ((select1 && select2) | (select1 && select3) | (select2 && select3)) next_state = S2;
             else if(select1) next_state = S5;
             else 
@@ -113,7 +125,9 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
             i[3] = 0; i[2] = 0; i[1] = 1; i[0] = 1;
             product1 = 0; product2 = 0; product3 = 0;
             quarter_out[2] = 0; quarter_out[1] = 0; quarter_out[0] = 0;
+            dollar_out = 0;
             if(quarter_in) next_state = S8;
+            else if(dollar_in) next_state = S20;  
             else if((select1 && select2) | (select1 && select3) | (select2 && select3)) next_state = S3;
             else if(select1) next_state = S6;
             else if(select2) next_state = S4;
@@ -124,6 +138,7 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
           begin
             i[3] = 0; i[2] = 0; i[1] = 1; i[0] = 1;
             product1 = 0; product2 = 1; product3 = 0;
+            dollar_out = 0;
             quarter_out[2] = 0; quarter_out[1] = 0; quarter_out[0] = 0;
             next_state = S0;
           end
@@ -132,6 +147,7 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
             i[3] = 0; i[2] = 0; i[1] = 1; i[0] = 0;
             product1 = 1; product2 = 0; product3 = 0;
             quarter_out[2] = 0; quarter_out[1] = 0; quarter_out[0] = 0;
+            dollar_out = 0;
             next_state = S0;
           end
         S6: 
@@ -139,6 +155,7 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
             i[3] = 0; i[2] = 0; i[1] = 1; i[0] = 1;
             product1 = 1; product2 = 0; product3 = 0;
             quarter_out[2] = 0; quarter_out[1] = 0; quarter_out[0] = 1;
+            dollar_out = 0;
             next_state = S0;
           end
         S7:
@@ -146,6 +163,7 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
             i[3] = 0; i[2] = 1; i[1] = 1; i[0] = 0;
             product1 = 0; product2 = 0; product3 = 0;
             quarter_out[2] = 0; quarter_out[1] = 0; quarter_out[0] = 1;
+            dollar_out = 0;
             next_state = S10;
           end
         S8:
@@ -153,7 +171,9 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
             i[3] = 0; i[2] = 1; i[1] = 0; i[0] = 0;
             product1 = 0; product2 = 0; product3 = 0;
             quarter_out[2] = 0; quarter_out[1] = 0; quarter_out[0] = 0;
+            dollar_out = 0;
             if(quarter_in) next_state = S9;
+            else if(dollar_in) next_state = S21;  
             else if((select1 && select2) | (select1 && select3) | (select2 && select3)) next_state = S8;
             else if(select1) next_state = S11;
             else if(select2) next_state = S12;
@@ -166,7 +186,9 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
             i[3] = 0; i[2] = 1; i[1] = 0; i[0] = 1;
             product1 = 0; product2 = 0; product3 = 0;
             quarter_out[2] = 0; quarter_out[1] = 0; quarter_out[0] = 0;
+            dollar_out = 0;
             if(quarter_in) next_state = S10;
+            else if(dollar_in) next_state = S22;
             else if((select1 && select2) | (select1 && select3) | (select2 && select3)) next_state = S9;
             else if(select1) next_state = S13;
             else if(select2) next_state = S14;
@@ -179,7 +201,9 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
             i[3] = 0; i[2] = 1; i[1] = 1; i[0] = 0;
             product1 = 0; product2 = 0; product3 = 0;
             quarter_out[2] = 0; quarter_out[1] = 0; quarter_out[0] = 0;
+            dollar_out = 0;
             if(quarter_in) next_state = S7;
+            else if(dollar_in) next_state = S23;
             else if((select1 && select2) | (select1 && select3) | (select2 && select3)) next_state = S10;
             else if(select1) next_state = S15;
             else if(select2) next_state = S16;
@@ -192,6 +216,7 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
             i[3] = 0; i[2] = 1; i[1] = 0; i[0] = 0;
             product1 = 1; product2 = 0; product3 = 0;
             quarter_out[2] = 0; quarter_out[1] = 1; quarter_out[0] = 0;
+            dollar_out = 0;
             next_state = S0;
           end
         S12:
@@ -199,6 +224,7 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
             i[3] = 0; i[2] = 1; i[1] = 0; i[0] = 0;
             product1 = 0; product2 = 1; product3 = 0;
             quarter_out[2] = 0; quarter_out[1] = 0; quarter_out[0] = 1;
+            dollar_out = 0;
             next_state = S0;
           end
         S13:
@@ -206,6 +232,7 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
             i[3] = 0; i[2] = 1; i[1] = 0; i[0] = 1;
             product1 = 1; product2 = 0; product3 = 0;
             quarter_out[2] = 0; quarter_out[1] = 1; quarter_out[0] = 1;
+            dollar_out = 0;
             next_state = S0;
           end
         S14:
@@ -213,6 +240,7 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
             i[3] = 0; i[2] = 1; i[1] = 0; i[0] = 1;
             product1 = 0; product2 = 1; product3 = 0;
             quarter_out[2] = 0; quarter_out[1] = 1; quarter_out[0] = 0;
+            dollar_out = 0;
             next_state = S0;
           end
         S15:
@@ -220,6 +248,7 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
             i[3] = 0; i[2] = 1; i[1] = 1; i[0] = 0;
             product1 = 1; product2 = 0; product3 = 0;
             quarter_out[2] = 1; quarter_out[1] = 0; quarter_out[0] = 0;
+            dollar_out = 0;
             next_state = S0;
           end
         S16:
@@ -227,6 +256,7 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
             i[3] = 0; i[2] = 1; i[1] = 1; i[0] = 0;
             product1 = 0; product2 = 1; product3 = 0;
             quarter_out[2] = 0; quarter_out[1] = 1; quarter_out[0] = 1;
+            dollar_out = 0;
             next_state = S0;
           end
         S17:
@@ -234,6 +264,7 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
             i[3] = 0; i[2] = 1; i[1] = 0; i[0] = 0;
             product1 = 0; product2 = 0; product3 = 1;
             quarter_out[2] = 0; quarter_out[1] = 0; quarter_out[0] = 0;
+            dollar_out = 0;
             next_state = S0;
           end
         S18:
@@ -241,6 +272,7 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
             i[3] = 0; i[2] = 1; i[1] = 0; i[0] = 1;
             product1 = 0; product2 = 0; product3 = 1;
             quarter_out[2] = 0; quarter_out[1] = 0; quarter_out[0] = 1;
+            dollar_out = 0;
             next_state = S0;
           end
         S19:
@@ -248,13 +280,47 @@ module old_vending_controller(clk, reset, quarter_in, select1, select2, select3,
             i[3] = 0; i[2] = 1; i[1] = 1; i[0] = 0;
             product1 = 0; product2 = 0; product3 = 1;
             quarter_out[2] = 0; quarter_out[1] = 1; quarter_out[0] = 0;
+            dollar_out = 0;
             next_state = S0;
+          end
+        S20:
+          begin
+            i[3] = 0; i[2] = 0; i[1] = 1; i[0] = 1;
+            product1 = 0; product2 = 0; product3 = 0;
+            quarter_out[2] = 0; quarter_out[1] = 0; quarter_out[0] = 0;
+            dollar_out = 1;
+            next_state = S3;
+          end
+        S21:
+          begin
+            i[3] = 0; i[2] = 1; i[1] = 0; i[0] = 0;
+            product1 = 0; product2 = 0; product3 = 0;
+            quarter_out[2] = 0; quarter_out[1] = 0; quarter_out[0] = 0;
+            dollar_out = 1;
+            next_state = S8;
+          end
+        S22:
+          begin
+            i[3] = 0; i[2] = 1; i[1] = 0; i[0] = 1;
+            product1 = 0; product2 = 0; product3 = 0;
+            quarter_out[2] = 0; quarter_out[1] = 0; quarter_out[0] = 0;
+            dollar_out = 1;
+            next_state = S9;
+          end
+        S23:
+          begin
+            i[3] = 0; i[2] = 1; i[1] = 1; i[0] = 0;
+            product1 = 0; product2 = 0; product3 = 0;
+            quarter_out[2] = 0; quarter_out[1] = 0; quarter_out[0] = 0;
+            dollar_out = 1;
+            next_state = S10;
           end
         default:
           begin
             i[3] = 0; i[2] = 1; i[1] = 0; i[0] = 0;
             product1 = 0; product2 = 0; product3 = 0;
             quarter_out[2] = 0; quarter_out[1] = 0; quarter_out[0] = 0;
+            dollar_out = 0;
             next_state = S0;
           end
       endcase
