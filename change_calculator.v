@@ -122,7 +122,7 @@ module change_calculator(clk, reset, quarter_in, dollar_in, selection,
             next_state = S17;
           else if(selection == selected1)
             next_state = S18;
-          else if(selection == selected1)
+          else if(selection == selected2)
             next_state = S0;
         S9:
           next_state = S5;
