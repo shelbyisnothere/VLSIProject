@@ -29,11 +29,12 @@ module vending_fsm_testbench;
   reg p1_expected, p2_expected, dout_expected;
   
   // Instantiate FSM
+  vending_controller vending_ctrllr(clk, reset, select1, select2, i,
+                                      product1, product2, selection);
+  
   change_calculator change(clk, reset, quarter_in, dollar_in, selection,
                               i, quarter_out, dollar_out);
   
-  vending_controller vending_ctrllr(clk, reset, select1, select2, i,
-                                      product1, product2, selection);
   // Start clock
   always
     begin
@@ -53,8 +54,7 @@ module vending_fsm_testbench;
       errors = 0;
       
       // Pulse reset
-      reset = 0;		#3;
-      reset = 1;		#10;
+      reset = 1;		#22;
       reset = 0;
     end
   
@@ -105,7 +105,7 @@ module vending_fsm_testbench;
         
         vector_count = vector_count + 1;
 
-        if(test_vectors[vector_count] === 8'bx)
+        if(test_vectors[vector_count] === 14'bx)
           begin
             $display("%d tests completed with %d errors", vector_count, errors);
             $stop;

@@ -38,8 +38,11 @@ module vending_controller(clk, reset, select1, select2, i,
   always @(posedge clk)
     begin
       if (reset)	state <= S0;
-      else			state <= next_state;
+      else	state <= next_state;
+    end
 
+  always @(select1, select2, i)
+    begin
       #1;
 
       case(state)

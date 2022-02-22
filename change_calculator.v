@@ -27,7 +27,7 @@ module change_calculator(clk, reset, quarter_in, dollar_in, selection,
   selected2 = 2'b10;
   
   // State encodings
-  parameter [2:0]
+  parameter [4:0]
   S0 = 5'b00000,
   S1 = 5'b00001,
   S2 = 5'b00010,
@@ -48,22 +48,26 @@ module change_calculator(clk, reset, quarter_in, dollar_in, selection,
   S17 = 5'b10001,
   S18 = 5'b10010;
   
-  reg [2:0] state;
-  reg [2:0] next_state;
+  reg [4:0] state;
+  reg [4:0] next_state;
   
   always @(posedge clk)
     begin
       if (reset)	state <= S0;
-      else			state <= next_state;
-
-      #1;
+      else state <= next_state;
+    end
     
+  always @(quarter_in, dollar_in, selection)
+    begin
+      #1;
       case(state)
         S0:
           if(quarter_in)
             next_state = S1;
           else if(dollar_in)
             next_state = S4;
+          else
+            next_state = S0;
         S1:
           if(quarter_in)
             next_state = S2;
@@ -141,15 +145,21 @@ module change_calculator(clk, reset, quarter_in, dollar_in, selection,
         S18:
           next_state = S0;
         default:
-        next_state = S0;
+          next_state = S0;
       endcase
     end       
    
    // Outputs
+   /*
    assign i = {(state == S8 | state == S16 | state == S17 | state == S18),
                 (state == S4 | state == S5 | state == S6 | state == S7 | state == S9 | state == S10 | state == S11 | state == S12 | state == S13 | state == S14 | state == S15),
                 (state == S2 | state == S3 | state == S6 | state == S7 | state == S11 | state == S12 | state == S13 | state == S14 | state == S15),
                 (state == S1 | state == S3 | state == S5 | state == S7 | state == S9 | state == S13 | state == S14 | state == S15)};
+   */
+   assign i[3] = (state == S8 | state == S16 | state == S17 | state == S18);   
+   assign i[2] = (state == S4 | state == S5 | state == S6 | state == S7 | state == S9 | state == S10 | state == S11 | state == S12 | state == S13 | state == S14 | state == S15);
+   assign i[1] = (state == S2 | state == S3 | state == S6 | state == S7 | state == S11 | state == S12 | state == S13 | state == S14 | state == S15);
+   assign i[0] = (state == S1 | state == S3 | state == S5 | state == S7 | state == S9 | state == S13 | state == S14 | state == S15);
    assign quarter_out = {(state == S18),
                           (state == S11 | state == S12 | state == S14),
                           (state == S10 | state == S14 | state == S15 | state == S16)};
