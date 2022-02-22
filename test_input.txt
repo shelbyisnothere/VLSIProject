@@ -18,8 +18,8 @@
 0000_0011000000 //buffer expected state 
 1000_0011000000 //insert $0.25
 0000_0100000000 //buffer expected state 
-0010_010000000  //select product 1
-0000_010010000  //product 1 dispensed
+0010_0100000000 //select product 1
+0000_0100100000 //product 1 dispensed
 // Case 2 
 //		Insert $1.50, select product 1 and see product dispensed with change
 0000_0000000000 //start state
