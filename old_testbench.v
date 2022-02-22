@@ -15,22 +15,21 @@
 //		file using the readmemb verilog standard function. Cases defined
 //		and explained are located in the test_input.tv file.
 module old_vending_controller_testbench;
-  reg clk, reset, quarter_in, select1, select2;
-  wire [1:0] i;
-  wire product1, product2, quarter_out;
-  
-  //reg [5:0] step_counter;
-  //logic end_sim;
+  reg clk, reset, quarter_in, select1, select2, select3;
+  wire [3:0] i;
+  wire product1, product2, product3;
+  wire [2:0] quarter_out;
   
   // For validation
   reg [31:0] vector_count, errors;
-  reg [7:0] test_vectors[10000:0];
-  reg [1:0] i_expected;
-  reg p1_expected, p2_expected, qout_expected;
+  reg [13:0] test_vectors[10000:0];
+  reg [3:0] i_expected;
+  reg p1_expected, p2_expected, p3_expected;
+  reg [2:0] qout_expected;
   
   // Instantiate FSM
-  old_vending_controller FSM(clk, reset, quarter_in, select1, select2, 
-                          i, product1, product2, quarter_out);
+  old_vending_controller FSM(clk, reset, quarter_in, select1, select2, select3,
+                          i, product1, product2, product3, quarter_out);
   // Start clock
   always
     begin
@@ -58,7 +57,7 @@ module old_vending_controller_testbench;
   // Apply test inputs on rising edge of clock
   always @(posedge clk)
     begin
-      {quarter_in, select1, select2, i_expected, p1_expected, p2_expected, qout_expected} = test_vectors[vector_count];
+      {quarter_in, select1, select2,select3, i_expected, p1_expected, p2_expected, p3_expected, qout_expected} = test_vectors[vector_count];
     end
   
   // Check results on descending edge of clock
@@ -68,31 +67,31 @@ module old_vending_controller_testbench;
         if ((i[1] !== i_expected[1]) | (i[0] !== i_expected[0]))
           begin
             $display("ERROR: Incorrect value for i");
-            $display("		inputs = %b", {quarter_in, select1, select2});
-            $display("		outputs = %b", {i[1], i[0], quarter_out, product1, product2});
-            $display("		expected outputs = %b", {i_expected[1], i_expected[0], qout_expected, p1_expected, p2_expected});
+            $display("		inputs = %b", {quarter_in, select1, select2, select3});
+            $display("		outputs = %b", {i, quarter_out, product1, product2, product3});
+            $display("		expected outputs = %b", {i_expected, qout_expected, p1_expected, p2_expected, p3_expected});
             errors = errors + 1;
           end
         if ((product1 !== p1_expected) | (product2 !== p2_expected))
           begin
             $display("ERROR: Incorrect value for a product");
-            $display("		inputs = %b", {quarter_in, select1, select2});
-            $display("		outputs = %b", {i[1], i[0], quarter_out, product1, product2});
-            $display("		expected outputs = %b", {i_expected[1], i_expected[0], qout_expected, p1_expected, p2_expected});
+            $display("		inputs = %b", {quarter_in, select1, select2, select3});
+            $display("		outputs = %b", {i, quarter_out, product1, product2, product3});
+            $display("		expected outputs = %b", {i_expected, qout_expected, p1_expected, p2_expected, p3_expected});
             errors = errors + 1;
           end
         if (quarter_out !== qout_expected)
           begin
             $display("ERROR: Incorrect value for quarter_out");
-            $display("		inputs = %b", {quarter_in, select1, select2});
-            $display("		outputs = %b", {i[1], i[0], quarter_out, product1, product2});
-            $display("		expected outputs = %b", {i_expected[1], i_expected[0], qout_expected, p1_expected, p2_expected});
+            $display("		inputs = %b", {quarter_in, select1, select2, select3});
+            $display("		outputs = %b", {i, quarter_out, product1, product2, product3});
+            $display("		expected outputs = %b", {i_expected, qout_expected, p1_expected, p2_expected, p3_expected});
             errors = errors + 1;
           end
         
         vector_count = vector_count + 1;
         
-        if(test_vectors[vector_count] === 8'bx)
+        if(test_vectors[vector_count] === 14'bx)
           begin
             $display("%d tests completed with %d errors", vector_count, errors);
             $stop;

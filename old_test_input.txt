@@ -1,68 +1,76 @@
 /*
- * Filename: test_input.tv
+ * Filename: test0_input.tv
  * Authors: Anna Nguyen, David Wang, Shelby King
  * Date: 2/8/2022
  * Course: Introduction to VLSI Design EE4325.001 Spring 2022
  * Description:
  *		Input file for project 1 testbench.
- *    (quarter_in)(select1)(select2)_(i[1])(i[0])(product1)(product2)(quarter_out)
+ *    (quarter0_in)(select1)(select2)(select3)0_(i[3)(i[2])(i[1])(i[0])(product1)(product2)(product3)(quarter0_out[2])(quarter0_out[1])(quarter0_out[0])
  */
 // Case 1 
 //		Insert $0.50, select product 1 and see product dispensed with NO change
-000_00000     //start state
-100_00000     //insert $0.25 
-000_01000
-100_01000     //insert $0.25, check if $0.50 inserted
-000_10000
-010_10000     //select product 1
-000_10100     //product 1 dispensed
+0000_0000000000     //start state
+1000_0000000000     //insert $0.25 
+0000_0001000000
+1000_0001000000     //insert $0.25, check if $0.50 inserted
+0000_0010000000
+0100_0010000000     //select product 1
+0000_0010100000     //product 1 dispensed
 // Case 2 
 //		Insert $0.75, select product 1 and see product dispensed with change
-000_00000     //start state
-100_00000     //insert $0.25
-000_01000 
-100_01000     //insert $0.25, check if $0.50 inserted
-000_10000
-100_10000     //insert $0.25, check if $0.75 inserted
-000_11000
-010_11000     //select product 1
-000_11101     //product 1 dispensed with change
+0000_0000000000     //start state
+1000_0000000000     //insert $0.25
+0000_0001000000 
+1000_0001000000     //insert $0.25, check if $0.50 inserted
+0000_0010000000
+1000_0010000000     //insert $0.25, check if $0.75 inserted
+0000_0011000000
+0100_0011000000     //select product 1
+0000_0011100001    //product 1 dispensed with change
 // Case 3 
 //		Insert $0.75, select product 2 and see product dispensed with NO change
-000_00000     //start state
-100_00000     //insert $0.25
-000_01000
-100_01000     //insert $0.25, check if $0.50 inserted
-000_10000
-100_10000     //insert $0.25, check if $0.75 inserted
-000_11000
-001_11000     //select product 2
-000_11010     //product 2 dispensed with NO change 
+0000_0000000000     //start state
+1000_0000000000     //insert $0.25
+0000_0001000000
+1000_0001000000     //insert $0.25, check if $0.50 inserted
+0000_0010000000
+1000_0010000000     //insert $0.25, check if $0.75 inserted
+0000_0011000000
+0010_0011000000     //select product 2
+0000_0011010000     //product 2 dispensed with NO change 
 // Case 4 
 //    Insert $0.75, select product 1 and select product 2 will remain in $0.75 state 
 //    user will select product 2 and see product dispensed with NO change
-000_00000     //start state
-100_00000     //insert $0.25
-000_01000
-100_01000     //insert $0.25, check if $0.50 inserted
-000_10000
-100_10000     //insert $0.25, check if $0.75 inserted
-000_11000
-011_11000     //select product 1 and 2 at the same time check $0.75 inserted 
-000_11000     //check no changes made
-001_11000     //select product 2
-000_11010     //product 2 dispensed with NO change 
+0000_0000000000     //start state
+1000_0000000000     //insert $0.25
+0000_0001000000
+1000_0001000000     //insert $0.25, check if $0.50 inserted
+0000_0010000000
+1000_0010000000     //insert $0.25, check if $0.75 inserted
+0000_0011000000
+0110_0011000000     //select product 1 and 2 at the same time check $0.75 inserted 
+0000_0011000000     //check no changes made
+0010_0011000000     //select product 2
+0000_0011010000     //product 2 dispensed with NO change 
 //Case 5
 //    Insert $0.75, and insert another quarter and see quarter dispensed 
 //    Select product 2 and see product dispensed
-000_00000     //start state
-100_00000     //insert $0.25
-000_01000
-100_01000     //insert $0.25, check if $0.50 inserted
-000_10000
-100_10000     //insert $0.25, check if $0.75 inserted
-000_11000
-100_11000     //insert $0.25, check if $0.75 inserted
-000_11001     //check no changes made, dispense $0.25
-001_11000     //select product 2 
-000_11010     //product 2 dispensed
+
+0000_0000000000     //start state
+1000_0000000000     //insert $0.25
+0000_0001000000
+1000_0001000000     //insert $0.25, check if $0.50 inserted
+0000_0010000000
+1000_0010000000     //insert $0.25, check if $0.75 inserted
+0000_0011000000
+1000_0011000000     //insert $0.25, check if $0.75 inserted
+0000_0100000000
+1000_0100000000
+0000_0101000000
+1000_0101000000
+0000_0110000000
+1000_0110000000     //try to insert another quarter
+0000_0110000001     //check no changes made, dispense $0.25
+0010_0110000000     //select product 2 
+0000_0110010011     //product 2 dispensed
+
