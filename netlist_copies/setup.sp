@@ -1,17 +1,25 @@
-$ copied from example HSPICE setup file in tutorial
+*
+ * Filename: setup.sp
+ * Authors: Anna Nguyen, David Wang, Shelby King
+ * Date: 3/9/2022
+ * Course: Introduction to VLSI Design EE4325.001 Spring 2022
+ * Description:
+ *	    Spice test setup file for project 3. General format borrowed
+ *      from provided tutorial example. 
+ *
 
 $ transistor model
 .include "/proj/cad/library/mosis/GF65_LPe/cmos10lpe_CDS_oa_dl064_11_20160415/models/YI-SM00030/Hspice/models/design.inc"
 .include "INV.pex.sp"
-
-
 
 .option post runlvl=5
 
 xi GND! OUT VDD! IN INV
 
 vdd VDD! GND! 1.2v
-vin IN GND! pwl(0ns 1.2v 1ns 1.2v 1.05ns 0v 6ns 0v 6.05ns 1.2v 12ns 1.2v)
+$ Define piecewise linear input waveform such that input slew rate is 40ps
+*vin IN GND! pwl(0ns 1.2v 1ns 1.2v 1.05ns 0v 6ns 0v 6.05ns 1.2v 12ns 1.2v)
+vin IN GND! pwl(0ns 1.2v 1ns 1.2v 1.005ns 0.96v 1.045ns 0.24v 1.05ns 0v 6ns 0v 6.005ns 0.24v 6.045ns 0.96v 6.05ns 1.2v 12ns 1.2v)
 cout OUT GND! 100f
 
 $transient analysis
