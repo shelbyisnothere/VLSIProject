@@ -14,13 +14,12 @@ $ transistor model
 
 .option post runlvl=5
 
-xi GND! OUT VDD! IN INV
+xi GND! OUT VDD! IN INV_TUTORIAL
 
 vdd VDD! GND! 1.2v
 $ Define piecewise linear input waveform such that input slew rate is 40ps
-*vin IN GND! pwl(0ns 1.2v 1ns 1.2v 1.05ns 0v 6ns 0v 6.05ns 1.2v 12ns 1.2v)
-vin IN GND! pwl(0ns 1.2v 1ns 1.2v 1.005ns 0.96v 1.045ns 0.24v 1.05ns 0v 6ns 0v 6.005ns 0.24v 6.045ns 0.96v 6.05ns 1.2v 12ns 1.2v)
-cout OUT GND! 100f
+vin IN GND! pwl(0ns 1.2v 1ns 1.2v 1.056ns 0v 6ns 0v 6.056ns 1.2v 12ns 1.2v)
+cout OUT GND! 55.002f
 
 $transient analysis
 .tr 100ps 12ns
@@ -33,12 +32,7 @@ $.tr 100ps 12ns sweep WP 1u 9u 0.5u
 .measure tdiff param='abs(trise-tfall)' $calculate delay difference
 .measure delay param='max(trise,tfall)' $calculate worst case delay
 
-$ method 1
-.measure tran iavg avg i(vdd) from=0 to=10n $average current in one clock cycle
-.measure energy param='1.2*iavg*10n' $calculate energy in one clock cycle
-.measure edp1 param='abs(delay*energy)'
-
-$ method 2
+$ method to get edp
 .measure tran t1 when v(IN)=1.19 fall=1
 .measure tran t2 when v(OUT)=1.19 rise=1
 .measure tran t3 when v(IN)=0.01 rise=1
