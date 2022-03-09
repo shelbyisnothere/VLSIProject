@@ -19,7 +19,7 @@ xi GND! OUT VDD! IN INV_TUTORIAL
 vdd VDD! GND! 1.2v
 $ Define piecewise linear input waveform such that input slew rate is 40ps
 vin IN GND! pwl(0ns 1.2v 1ns 1.2v 1.056ns 0v 6ns 0v 6.056ns 1.2v 12ns 1.2v)
-cout OUT GND! 55.002f
+cout OUT GND! 56.04f
 
 $transient analysis
 .tr 100ps 12ns
@@ -32,7 +32,7 @@ $.tr 100ps 12ns sweep WP 1u 9u 0.5u
 .measure tdiff param='abs(trise-tfall)' $calculate delay difference
 .measure delay param='max(trise,tfall)' $calculate worst case delay
 
-$ method to get edp
+$ Method 2 to calculate edp from example tutorial
 .measure tran t1 when v(IN)=1.19 fall=1
 .measure tran t2 when v(OUT)=1.19 rise=1
 .measure tran t3 when v(IN)=0.01 rise=1
@@ -42,6 +42,6 @@ $ method to get edp
 .measure energy1 param='1.2*i1*(t2-t1)' $calculate energy when output rise
 .measure energy2 param='1.2*i2*(t4-t3)' $calculate energy when output fall
 .measure energysum param='energy1+energy2'
-.measure edp2 param='abs(delay*energysum)'
+.measure edp param='abs(delay*energysum)' $ Energy product delay
 
 .end
